@@ -9,7 +9,6 @@ import {
   Schema,
   Table,
 } from "@powersync/react-native";
-import { AppSchema } from "./AppSchema";
 
 import React from "react";
 
