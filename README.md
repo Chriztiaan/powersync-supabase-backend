@@ -36,5 +36,6 @@ Resume
 docker start expo-powersync
 ```
 
-Studio
+## Supabase Studio
+
 http://127.0.0.1:54323/project/default
