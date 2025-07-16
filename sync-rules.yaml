@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=https://unpkg.com/@powersync/service-sync-rules@latest/schema/sync_rules.json
+
+# Sync-rule docs: https://docs.powersync.com/usage/sync-rules
+bucket_definitions:
+  user_lists:
+    # Select parameters for the bucket, using the current user_id
+    parameters: SELECT request.user_id() as user_id # (request.user_id() comes from the JWT token)
+    data:
+      # Select data rows/documents using the parameters above
+      - SELECT * FROM lists WHERE owner_id = bucket.user_id
