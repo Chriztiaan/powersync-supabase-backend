@@ -1,4 +1,4 @@
-import { SupabaseConnector } from '@/library/powersync/SupabaseConnector';
+import { SupabaseConnector } from './SupabaseConnector';
 import { createBaseLogger, LogLevel, PowerSyncContext, PowerSyncDatabase, SQLJSOpenFactory } from '@powersync/react-native';
 import { AppSchema } from './AppSchema';
 
