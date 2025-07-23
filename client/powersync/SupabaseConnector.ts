@@ -5,9 +5,7 @@ import {
   PowerSyncBackendConnector,
   UpdateType,
 } from "@powersync/react-native";
-
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-
 export type SupabaseConfig = {
   supabaseUrl: string;
   supabaseAnonKey: string;
@@ -36,8 +34,7 @@ export class SupabaseConnector
 {
   readonly client: SupabaseClient;
   readonly config: SupabaseConfig;
-
-  enableUploads: boolean = true;
+  userId?: string;
 
   constructor() {
     super();
@@ -50,13 +47,13 @@ export class SupabaseConnector
       this.config.supabaseUrl,
       this.config.supabaseAnonKey
     );
+    this.loadUserId();
   }
 
-  async getUserId(): Promise<string> {
+  async loadUserId(): Promise<void> {
     let {
       data: { session },
     } = await this.client.auth.getSession();
-
     if (session == null) {
       const { data, error } = await this.client.auth.signInAnonymously();
       if (error) {
@@ -64,19 +61,16 @@ export class SupabaseConnector
       }
       session = data.session;
     }
-
     if (session == null || session.user == null) {
       throw new Error(`Failed to get Supabase session or user`);
     }
-
-    return session.user.id;
+    this.userId = session.user.id;
   }
 
   async fetchCredentials() {
     let {
       data: { session },
     } = await this.client.auth.getSession();
-
     if (session == null) {
       const { data, error } = await this.client.auth.signInAnonymously();
       if (error) {
@@ -84,11 +78,9 @@ export class SupabaseConnector
       }
       session = data.session;
     }
-
     if (session == null) {
       throw new Error(`Failed to get Supabase session`);
     }
-
     return {
       endpoint: this.config.powersyncUrl,
       token: session.access_token,
@@ -98,11 +90,9 @@ export class SupabaseConnector
   async uploadData(database: AbstractPowerSyncDatabase): Promise<void> {
     console.log("Uploading data to Supabase...");
     const transaction = await database.getNextCrudTransaction();
-
     if (!transaction) {
       return;
     }
-
     let lastOp: CrudEntry | null = null;
     try {
       // Note: If transactional consistency is important, use database functions
@@ -123,7 +113,6 @@ export class SupabaseConnector
             result = await table.delete().eq("id", op.id);
             break;
         }
-
         if (result.error) {
           console.error(result.error);
           result.error.message = `Could not ${
@@ -132,7 +121,6 @@ export class SupabaseConnector
           throw result.error;
         }
       }
-
       await transaction.complete();
     } catch (ex: any) {
       console.debug(ex);
