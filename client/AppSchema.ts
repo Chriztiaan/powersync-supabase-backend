@@ -1,33 +1,26 @@
 import { column, Schema, Table } from "@powersync/react-native";
 
-const todos = new Table(
-  {
-    list_id: column.text,
-    photo_id: column.text,
-    created_at: column.text,
-    completed_at: column.text,
-    description: column.text,
-    created_by: column.text,
-    completed_by: column.text,
-    completed: column.integer,
-  },
-  { indexes: { list: ["list_id"] } }
-);
-
-const lists = new Table({
+const thoughts = new Table({
+  content: column.text,
   created_at: column.text,
-  name: column.text,
-  owner_id: column.text,
+  created_by: column.text,
 });
 
+const reactions = new Table(
+  {
+    thought_id: column.text,
+    user_id: column.text,
+    emoji: column.text,
+    created_at: column.text,
+  },
+  { indexes: { thought: ["thought_id"] } }
+);
+
 export const AppSchema = new Schema({
-  todos,
-  lists,
+  thoughts,
+  reactions,
 });
 
 export type Database = (typeof AppSchema)["types"];
-export type TodoRecord = Database["todos"];
-// OR:
-// export type Todo = RowType<typeof todos>;
-
-export type ListRecord = Database["lists"];
+export type ThoughtRecord = Database["thoughts"];
+export type ReactionRecord = Database["reactions"];
