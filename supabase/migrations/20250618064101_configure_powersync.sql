@@ -1,29 +1,26 @@
 create table
-  public.lists (
+  public.thoughts (
     id uuid not null default gen_random_uuid (),
     created_at timestamp with time zone not null default now(),
-    name text not null,
-    owner_id uuid not null,
-    constraint lists_pkey primary key (id),
-    constraint lists_owner_id_fkey foreign key (owner_id) references auth.users (id) on delete cascade
+    content text not null,
+    created_by uuid not null,
+    constraint thoughts_pkey primary key (id),
+    constraint thoughts_created_by_fkey foreign key (created_by) references auth.users (id) on delete cascade
   ) tablespace pg_default;
 
 create table
-  public.todos (
+  public.reactions (
     id uuid not null default gen_random_uuid (),
     created_at timestamp with time zone not null default now(),
-    completed_at timestamp with time zone null,
-    description text not null,
-    completed boolean not null default false,
-    created_by uuid null,
-    completed_by uuid null,
-    list_id uuid not null,
-    constraint todos_pkey primary key (id),
-    constraint todos_created_by_fkey foreign key (created_by) references auth.users (id) on delete set null,
-    constraint todos_completed_by_fkey foreign key (completed_by) references auth.users (id) on delete set null,
-    constraint todos_list_id_fkey foreign key (list_id) references lists (id) on delete cascade
+    thought_id uuid not null,
+    user_id uuid not null,
+    emoji text not null,
+    constraint reactions_pkey primary key (id),
+    constraint reactions_thought_id_fkey foreign key (thought_id) references thoughts (id) on delete cascade,
+    constraint reactions_user_id_fkey foreign key (user_id) references auth.users (id) on delete cascade
   ) tablespace pg_default;
+
 
 -- Create publication for powersync
 
-create publication powersync for table public.lists, public.todos;
+create publication powersync for table public.thoughts, public.reactions;
