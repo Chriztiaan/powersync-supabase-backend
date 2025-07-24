@@ -3,7 +3,7 @@ import { createBaseLogger, LogLevel, PowerSyncContext, PowerSyncDatabase, SQLJSO
 import { AppSchema } from './AppSchema';
 import * as FileSystem from 'expo-file-system';
 
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 
 const SupabaseContext = React.createContext<SupabaseConnector | null>(null);
 export const useSupabase = () => React.useContext(SupabaseContext);
@@ -69,7 +69,7 @@ const logger = createBaseLogger();
 logger.useDefaults();
 logger.setLevel(LogLevel.DEBUG);
 
-export const SystemProvider = ({ children }: { children: React.ReactNode }) => {
+export const SystemProvider = ({ children }: PropsWithChildren) => {
     return (
         <PowerSyncContext.Provider value={powerSync as any}>
             <SupabaseContext.Provider value={connector}>{children}</SupabaseContext.Provider>
