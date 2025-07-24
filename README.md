@@ -1,8 +1,6 @@
-#### Quick Start: Local Development
+#### Quick Start: PowerSync+Supabase Local Development
 
-This demo can be started with local PowerSync and Supabase services.
-
-Follow the [instructions](https://supabase.com/docs/guides/cli/getting-started) for configuring Supabase locally.
+This demo allows you to quickstart a local PowerSync and Supabase services.
 
 Copy the environment variables template file
 
@@ -15,8 +13,6 @@ Start the Supabase project
 ```bash
 supabase start
 ```
-
-Copy the `anon key` and `JWT secret` into the `.env` file.
 
 Run the PowerSync service with
 
@@ -33,7 +29,7 @@ docker run \
 Resume
 
 ```bash
-docker start expo-powersync
+docker restart expo-powersync
 ```
 
 ## Supabase Studio
