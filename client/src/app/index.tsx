@@ -24,8 +24,8 @@ function ThoughtReactions({ thoughtId }) {
   const connector = useSupabase();
 
   // Query reactions grouped by emoji with counts
-  const { data: reactionGroups = [] } = useQuery<EmojiCounter>(
-    "SELECT emoji, COUNT(*) as count FROM reactions WHERE thought_id = ? GROUP BY emoji ORDER BY COUNT(*) DESC",
+  const { data: reactionGroups } = useQuery<EmojiCounter>(
+    "SELECT emoji, COUNT(*) as count FROM reactions WHERE thought_id = ? GROUP BY emoji ORDER BY count DESC",
     [thoughtId]
   );
 
@@ -50,9 +50,9 @@ function ThoughtReactions({ thoughtId }) {
           {reactionGroups.map((group) => (
             <View key={group.emoji} className="flex-row items-center bg-gray-100 rounded-full px-3 py-1.5 mr-2 mb-1">
               <Text className="text-base">{group.emoji}</Text>
-              {group.count > 1 && (
+              {group.count > 1 ? (
                 <Text className="text-sm text-gray-600 ml-1">{group.count}</Text>
-              )}
+              ) : null}
             </View>
           ))}
         </View>
@@ -96,7 +96,7 @@ export default function ThoughtsApp() {
   const connector = useSupabase();
 
   // Query all thoughts
-  const { data: thoughts = [] } = useQuery<ThoughtRecord>(
+  const { data: thoughts } = useQuery<ThoughtRecord>(
     "SELECT * FROM thoughts ORDER BY created_at DESC"
   );
 
